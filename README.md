@@ -1,6 +1,6 @@
 # Training Task
 1. Make the training handler run as fast as possible
-2. Add context cancel and timeout 3 second
+2. Add context cancel and timeout 5 second
 3. Add hitcount on each request and add errorcount each error request happen
 4. Add feature on background process which will check every 1 second check if errorcount > 10 then :
      - create a file for log the detail
