@@ -1,7 +1,9 @@
 package main
 
 import (
+	"context"
 	"net/http"
+	"time"
 )
 
 //HitCount each 10 sec
@@ -17,14 +19,24 @@ func init() {
 	FiveLastRequestDetail = make([]map[string]interface{}, 0)
 }
 
+type MyHandler func(ctx context.Context, w http.ResponseWriter, r *http.Request) (resp interface{}, err error)
+
 func main() {
 	http.Handle("/training", middleware(GetTrainingHandler().Handler))
 	http.ListenAndServe("localhost:9090", nil)
 }
 
-func middleware(h http.HandlerFunc) http.HandlerFunc {
+func middleware(h MyHandler) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		h(w, r)
+		ctx := r.Context()
+		ctx = context.WithValue(ctx, KeyTimeStart, time.Now())
+		resp, err := h(ctx, w, r)
+		if err != nil {
+			SetFiveLastRequestDetail(&FiveLastRequestDetail, resp.(map[string]interface{}))
+			w.Write([]byte(err.Error()))
+			return
+		}
+		w.Write([]byte(resp.(string)))
 	}
 }
 

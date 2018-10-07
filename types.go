@@ -1,6 +1,7 @@
 package main
 
 type TopicNsq string
+type ContextKey string
 
 type ShopData struct {
 	ShopID   int64

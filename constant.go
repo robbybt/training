@@ -15,3 +15,8 @@ const (
 	TopicPostOrderCreation   TopicNsq = "TopicPostPaymentCreation"
 	TopicPostPaymentCreation TopicNsq = "TopicPostPaymentCreation"
 )
+
+//constant for context
+const (
+	KeyTimeStart ContextKey = "timeStart"
+)
