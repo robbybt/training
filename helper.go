@@ -49,3 +49,10 @@ func BuildPaymentDetailData(orderID int64, paymentID int64) *PaymentDetailData {
 		PaymentID: paymentID,
 	}
 }
+
+func BuildLogDetail(request interface{}, response interface{}) *LogDetail {
+	return &LogDetail{
+		Request:  request,
+		Response: response,
+	}
+}

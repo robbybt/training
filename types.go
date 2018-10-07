@@ -42,3 +42,8 @@ type PaymentDetailData struct {
 	PaymentID int64
 	OrderID   int64
 }
+
+type LogDetail struct {
+	Request  interface{}
+	Response interface{}
+}

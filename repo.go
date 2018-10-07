@@ -25,7 +25,7 @@ func GetProductData(ctx context.Context, requestAPI []int64) ([]*ProductData, er
 }
 
 func GetShopData(ctx context.Context, requestAPI []int64) ([]*ShopData, error) {
-	result := make([]*ShopData, 0)
+	responseAPI := make([]*ShopData, 0)
 	fmt.Println("GetShopData...")
 	//APICALL start
 	for _, id := range requestAPI {
@@ -33,9 +33,10 @@ func GetShopData(ctx context.Context, requestAPI []int64) ([]*ShopData, error) {
 		<-time.Tick(FastResponse)
 		temp.ShopName = fmt.Sprint("shopname ", id)
 		temp.SellerID = 1000 + id
+		responseAPI = append(responseAPI, temp)
 	}
 	//APICALL end
-	return result, nil
+	return responseAPI, nil
 }
 
 func GetCustomerData(ctx context.Context, requestAPI int64) (*CustomerData, error) {

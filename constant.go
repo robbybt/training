@@ -6,8 +6,8 @@ import (
 
 //constant for waiting
 const (
-	FastResponse = time.Millisecond * 500
-	SlowResponse = time.Millisecond * 1000
+	FastResponse = time.Millisecond * 50
+	SlowResponse = time.Millisecond * 100
 )
 
 //constant for topic nsq

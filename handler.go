@@ -40,6 +40,7 @@ func (t training) Handler(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("error"))
 		return
 	}
+	logging := GetLogging()
 	//=========Dont change this code==================
 
 	// What you have Now :
@@ -49,15 +50,19 @@ func (t training) Handler(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	//Get Customer Data
 	customer, err := GetCustomerData(ctx, customerID)
+	logging.Save("GetCustomerData", BuildLogDetail(customerID, customer))
 	if err != nil {
 		w.Write([]byte("error GetCustomerData"))
+		SetArraylistBelowFive(&FiveLastRequestDetail, logging.Detail)
 		return
 	}
 
 	//Get ALL Product
 	products, err := GetProductData(ctx, productIDs)
+	logging.Save("GetProductData", BuildLogDetail(productIDs, products))
 	if err != nil {
 		w.Write([]byte("error GetProductData"))
+		SetArraylistBelowFive(&FiveLastRequestDetail, logging.Detail)
 		return
 	}
 
@@ -67,24 +72,29 @@ func (t training) Handler(w http.ResponseWriter, r *http.Request) {
 		listShop = append(listShop, p.ShopID)
 	}
 	shops, err := GetShopData(ctx, listShop)
+	logging.Save("GetShopData", BuildLogDetail(listShop, shops))
 	if err != nil {
 		w.Write([]byte("error GetShopData"))
+		SetArraylistBelowFive(&FiveLastRequestDetail, logging.Detail)
 		return
 	}
 
 	err = t.validationCustomer(ctx, customer)
 	if err != nil {
 		w.Write([]byte("error validationCustomer"))
+		SetArraylistBelowFive(&FiveLastRequestDetail, logging.Detail)
 		return
 	}
 	err = t.validationProducts(ctx, products)
 	if err != nil {
 		w.Write([]byte("error validationProducts"))
+		SetArraylistBelowFive(&FiveLastRequestDetail, logging.Detail)
 		return
 	}
 	err = t.validationShop(ctx, shops)
 	if err != nil {
 		w.Write([]byte("error validationShop"))
+		SetArraylistBelowFive(&FiveLastRequestDetail, logging.Detail)
 		return
 	}
 
@@ -92,6 +102,7 @@ func (t training) Handler(w http.ResponseWriter, r *http.Request) {
 	tx, err := beginTx()
 	if err != nil {
 		w.Write([]byte("error beginTx"))
+		SetArraylistBelowFive(&FiveLastRequestDetail, logging.Detail)
 		return
 	}
 
@@ -102,6 +113,7 @@ func (t training) Handler(w http.ResponseWriter, r *http.Request) {
 		err = InsertCart(ctx, tx, cart) // will update cart id
 		if err != nil {
 			w.Write([]byte("error InsertCart"))
+			SetArraylistBelowFive(&FiveLastRequestDetail, logging.Detail)
 			return
 		}
 		carts = append(carts, cart)
@@ -112,6 +124,7 @@ func (t training) Handler(w http.ResponseWriter, r *http.Request) {
 	err = InsertPayment(ctx, tx, paymentData) //will update payment id
 	if err != nil {
 		w.Write([]byte("error InsertPayment"))
+		SetArraylistBelowFive(&FiveLastRequestDetail, logging.Detail)
 		return
 	}
 
@@ -121,12 +134,14 @@ func (t training) Handler(w http.ResponseWriter, r *http.Request) {
 		err = InsertOrder(ctx, tx, o) //will update order id
 		if err != nil {
 			w.Write([]byte("error InsertOrder"))
+			SetArraylistBelowFive(&FiveLastRequestDetail, logging.Detail)
 			return
 		}
 		//Insert PaymentDetail
 		err = InsertPaymentDetail(ctx, tx, BuildPaymentDetailData(o.OrderID, paymentData.PaymentID))
 		if err != nil {
 			w.Write([]byte("error InsertPaymentDetail"))
+			SetArraylistBelowFive(&FiveLastRequestDetail, logging.Detail)
 			return
 		}
 	}
@@ -134,6 +149,7 @@ func (t training) Handler(w http.ResponseWriter, r *http.Request) {
 	err = commit(tx)
 	if err != nil {
 		w.Write([]byte("error commit"))
+		SetArraylistBelowFive(&FiveLastRequestDetail, logging.Detail)
 		return
 	}
 	// End Transactional db
