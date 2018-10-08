@@ -19,17 +19,20 @@ func SetFiveLastRequestDetail(arr *[]map[string]interface{}, val map[string]inte
 	*arr = array
 }
 
+//PrintOut Create file with json indent
 func PrintOut(data interface{}) {
 	t, _ := json.MarshalIndent(data, "", "\t")
 	createFile(t)
 }
 
+// Create file
 func createFile(data []byte) {
 	t := time.Now().Format("2006-01-02 15:04:05")
 	a, _ := os.Create(fmt.Sprint(t, ".txt"))
 	a.Write(data)
 }
 
+//GetSinceTimeStart get time lapse from start endpoint
 func GetSinceTimeStart(ctx context.Context) time.Duration {
 	val := ctx.Value(KeyTimeStart).(time.Time)
 	return time.Since(val)

@@ -1,19 +1,23 @@
 package main
 
-type logging struct {
+//Logging will save all detail log
+type Logging struct {
 	Detail map[string]interface{}
 }
 
-func GetLogging() *logging {
-	return &logging{
+//GetLogging get new instance
+func GetLogging() *Logging {
+	return &Logging{
 		Detail: make(map[string]interface{}, 0),
 	}
 }
 
-func (l *logging) Save(funcName string, detail interface{}) {
+//Save will save the detail on map[string]interface{}
+func (l *Logging) Save(funcName string, detail interface{}) {
 	l.Detail[funcName] = detail
 }
 
-func (l *logging) GetDetail() map[string]interface{} {
+//GetDetail will pass the detail which was saved
+func (l *Logging) GetDetail() map[string]interface{} {
 	return l.Detail
 }
