@@ -39,7 +39,3 @@ func middleware(h MyHandler) http.HandlerFunc {
 		w.Write([]byte(resp.(string)))
 	}
 }
-
-func setzz(a *[]int64) {
-	*a = append(*a, 10)
-}
