@@ -12,7 +12,7 @@ const (
 
 //constant for topic nsq
 const (
-	TopicPostOrderCreation   TopicNsq = "TopicPostPaymentCreation"
+	TopicPostOrderCreation   TopicNsq = "TopicPostOrderCreation"
 	TopicPostPaymentCreation TopicNsq = "TopicPostPaymentCreation"
 )
 

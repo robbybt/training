@@ -34,7 +34,9 @@ func middleware(h MyHandler) http.HandlerFunc {
 		ctx = context.WithValue(ctx, KeyTimeStart, time.Now())
 		resp, err := h(ctx, w, r)
 		if err != nil {
-			SetFiveLastRequestDetail(&FiveLastRequestDetail, resp.(map[string]interface{}))
+			if resp != nil {
+				SetFiveLastRequestDetail(&FiveLastRequestDetail, resp.(map[string]interface{}))
+			}
 			w.Write([]byte(err.Error()))
 			return
 		}
