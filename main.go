@@ -23,6 +23,8 @@ type MyHandler func(ctx context.Context, w http.ResponseWriter, r *http.Request)
 
 func main() {
 	http.Handle("/training", middleware(GetTrainingHandler().Handler))
+	http.Handle("/api2", middleware(GetTrainingHandler().Handler2))
+	http.Handle("/api3", middleware(GetTrainingHandler().Handler3))
 	http.ListenAndServe("localhost:9090", nil)
 }
 
