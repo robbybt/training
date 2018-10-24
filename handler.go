@@ -1,9 +1,7 @@
 package main
 
 import (
-	"bytes"
 	"context"
-	"encoding/json"
 	"errors"
 	"fmt"
 	"net/http"
@@ -197,44 +195,5 @@ func commit(tx *sqlx.Tx) (err error) {
 func publish(topic TopicNsq) (err error) {
 	fmt.Println("publish...", topic)
 	<-time.Tick(SlowResponse)
-	return
-}
-
-func (t training) Handler2(ctx context.Context, w http.ResponseWriter, r *http.Request) (resp interface{}, err error) {
-	content := map[string]interface{}{
-		"confirmation_ids": 1,
-		"user_id":          1,
-	}
-
-	jsonContent, _ := json.Marshal(content)
-
-	url := "http://localhost:9090/api3"
-	ctx, cancel := context.WithTimeout(ctx, time.Second*1)
-	cancel()
-	requestAPI, _ := http.NewRequest(http.MethodPost, url, bytes.NewBuffer(jsonContent))
-	requestAPI.WithContext(ctx)
-	Client := &http.Client{}
-	_, err = Client.Do(requestAPI)
-	resp = "b"
-	return
-}
-
-func (t training) Handler3(ctx context.Context, w http.ResponseWriter, r *http.Request) (resp interface{}, err error) {
-	doneChan := make(chan bool)
-	go func() {
-		<-time.Tick(time.Second * 3)
-		fmt.Println("masuk")
-
-		doneChan <- true
-	}()
-
-	fmt.Println(ctx.Err().Error())
-	select {
-	case <-doneChan:
-		fmt.Println("done")
-	case <-ctx.Done():
-		fmt.Println("timeout")
-	}
-	resp = "a"
 	return
 }
