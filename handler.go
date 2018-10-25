@@ -130,13 +130,19 @@ func (t training) Handler(ctx context.Context, w http.ResponseWriter, r *http.Re
 	err = publish(TopicPostOrderCreation)
 	if err != nil {
 		fmt.Println("error publish", TopicPostOrderCreation)
+		RetryFunc(func() error {
+			return publish(TopicPostOrderCreation)
+		})
 	}
 	err = publish(TopicPostPaymentCreation)
 	if err != nil {
 		fmt.Println("error publish", TopicPostPaymentCreation)
+		RetryFunc(func() error {
+			return publish(TopicPostPaymentCreation)
+		})
 	}
 
-	resp = fmt.Sprint(GetSinceTimeStart(ctx), " success ", HitCount)
+	resp = fmt.Sprint(GetSinceTimeStart(ctx), " success")
 	return resp, nil
 }
 

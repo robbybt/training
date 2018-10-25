@@ -37,3 +37,16 @@ func GetSinceTimeStart(ctx context.Context) time.Duration {
 	val := ctx.Value(KeyTimeStart).(time.Time)
 	return time.Since(val)
 }
+
+func RetryFunc(f func() error) {
+	go func() {
+		for i := 0; i < 5; i++ {
+			<-time.Tick(time.Second * time.Duration(i+1))
+			err := f()
+			if err == nil {
+				break
+			}
+		}
+		fmt.Println("retry finish")
+	}()
+}
